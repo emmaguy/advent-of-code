@@ -1,5 +1,9 @@
 # Advent of Code 2019
 
-- `kotlinc day1.kt -include-runtime -d day1.jar`
-- `java -jar day1.jar`
-- `ktlint -F day1.kt` 
+## Compile & run
+
+`kotlinc day1.kt -include-runtime -d out.jar && java -jar out.jar`
+
+## Format code
+
+`ktlint -F day1.kt` 
