@@ -23,10 +23,35 @@ fun main() {
     // coordWire2.pointsVisited.forEach { print("visited: $it\n") }
 
     print("intersection:\n")
-    val intersection = coordWire1.pointsVisited.intersect(coordWire2.pointsVisited)
-    intersection.forEach { print("$it, abs distance: ${Math.abs(it.x) + Math.abs(it.y)}\n") }
-    val result = intersection.map { Math.abs(it.x) + Math.abs(it.y) }.filter { it != 0 }.toSortedSet().first()
-    print("result: $result\n")
+    val intersection = coordWire1.pointsVisited.map { it.first }.intersect(coordWire2.pointsVisited.map { it.first }).toMutableSet()
+    intersection.remove(Coordinate(0, 0))
+    intersection.forEach { print("$it\n") }
+
+    // print("visited in 1:\n")
+    // coordWire1.pointsVisited.forEach { print("visited: $it\n") }
+    // print("visited in 2:\n")
+    // coordWire2.pointsVisited.forEach { print("visited: $it\n") }
+
+    val pointsFrom1 = coordWire1.pointsVisited.filter { intersection.contains(it.first) }
+    val pointsFrom2 = coordWire2.pointsVisited.filter { intersection.contains(it.first) }
+
+    print("1:\n")
+    pointsFrom1.forEach { print("${it.first}, ${it.second}\n")}
+    print("2:\n")
+    pointsFrom2.forEach { print("${it.first}, ${it.second}\n")}
+
+    val steps = mutableListOf<Int>()
+    for(x in pointsFrom1) {
+        val y = pointsFrom2.find { it.first == x.first }!!
+        print("coord for ${x.first}, total: ${x.second + y.second}\n")
+        steps.add(x.second + y.second)
+    }
+    steps.sort()
+    print("result: ${steps.first()}\n")
+
+    // intersection.forEach { print("$it, abs distance: ${Math.abs(it.x) + Math.abs(it.y)}\n") }
+    // val result = intersection.map { Math.abs(it.x) + Math.abs(it.y) }.toSortedSet().first()
+    // print("result: $result\n")
 }
 
 fun parseAndMove(input: List<String>, coordinate: Coordinate) {
@@ -49,41 +74,65 @@ fun toDirectionAndDistance(input: String): Pair<Direction, Int> {
 }
 
 data class Coordinate(var x: Int, var y: Int) {
-    val pointsVisited = mutableSetOf<Coordinate>()
+    val pointsVisited = mutableSetOf<Pair<Coordinate, Int>>()
+
+    var stepsTaken = 1
 
     fun move(direction: Direction, distance: Int) {
         print("move in direction: $direction, distance: $distance\n")
+        var isFirstMove = true
         when (direction) {
             Direction.UP -> {
                 for (i in 0..distance) {
-                    pointsVisited.add(Coordinate(x + i, y))
-                    // print("up ${pointsVisited.last()}\n")
+                    pointsVisited.add(Pair(Coordinate(x + i, y), stepsTaken))
+                    if(isFirstMove) {
+                        isFirstMove = false
+                    } else {
+                        stepsTaken++
+                    }
+                    // print("up ${pointsVisited.last()}, stepsTaken: $stepsTaken\n")
                 }
                 x += distance
             }
             Direction.DOWN -> {
                 for (i in 0..distance) {
-                    pointsVisited.add(Coordinate(x - i, y))
-                    // print("down ${pointsVisited.last()}\n")
+                    pointsVisited.add(Pair(Coordinate(x - i, y), stepsTaken))
+                    if(isFirstMove) {
+                        isFirstMove = false
+                    } else {
+                        stepsTaken++
+                    }
+                    // print("down ${pointsVisited.last()}, stepsTaken: $stepsTaken\n")
                 }
                 x -= distance
             }
             Direction.LEFT -> {
                 for (i in 0..distance) {
-                    pointsVisited.add(Coordinate(x, y - i))
-                    // print("left ${pointsVisited.last()}\n")
+                    pointsVisited.add(Pair(Coordinate(x, y - i), stepsTaken))
+                    if(isFirstMove) {
+                        isFirstMove = false
+                    } else {
+                        stepsTaken++
+                    }
+                    // print("left ${pointsVisited.last()}, stepsTaken: $stepsTaken\n")
                 }
                 y -= distance
             }
             Direction.RIGHT -> {
                 for (i in 0..distance) {
-                    pointsVisited.add(Coordinate(x, y + i))
-                    // print("right ${pointsVisited.last()}\n")
+                    pointsVisited.add(Pair(Coordinate(x, y + i), stepsTaken))
+                    if(isFirstMove) {
+                        isFirstMove = false
+                    } else {
+                        stepsTaken++
+                    }
+                    // print("right ${pointsVisited.last()}, stepsTaken: $stepsTaken\n")
                 }
                 y += distance
             }
         }
-        print("now at $this\n")
+        print("now at $this, stepsTaken: $stepsTaken\n")
+        isFirstMove = true
     }
 
     override fun toString(): String {
