@@ -1,31 +1,35 @@
-var min = 246540
-var max = 787419
-
 fun main() {
+    val size = findValidValues(min = 246540, max = 787419)
+    print("count: $size\n\n")
+}
+
+fun findValidValues(min: Int, max: Int): Int {
     val validNumbers = mutableListOf<Int>()
     for (x in min..max) {
-        // print("checking: $x\n")
         if (isValid(x)) {
             validNumbers.add(x)
         }
     }
-    print("count: ${validNumbers.size}\n\n")
+    return validNumbers.size
 }
 
 fun isValid(number: Int): Boolean {
     var currentNumber = number
     val digitFrequencyMap = mutableMapOf<Int, Int>()
 
+    // Iterate through all the digits
     while (true) {
         val currentDigit = currentNumber % 10
         val nextDigit = (currentNumber / 10) % 10
+
         if (!digitFrequencyMap.contains(currentDigit)) {
-            digitFrequencyMap.put(currentDigit, 1)
+            digitFrequencyMap[currentDigit] = 1
         } else {
-            digitFrequencyMap.put(currentDigit, digitFrequencyMap.get(currentDigit)!! + 1)
+            digitFrequencyMap[currentDigit] = digitFrequencyMap[currentDigit]!! + 1
         }
 
-        // Going from left to right, the digits never decrease; they only ever increase or stay the same (like 111123 or 135679).
+        // From left to right, the digits never decrease
+        // They only ever increase or stay the same (like 111123 or 135679)
         if (nextDigit > currentDigit) {
             return false
         }
