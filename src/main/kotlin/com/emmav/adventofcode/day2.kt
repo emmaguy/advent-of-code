@@ -4,10 +4,10 @@ fun main() {
     // Find the noun and verb that result in 19690720
     for (noun in 0..99) {
         for (verb in 0..99) {
-            val input = staticInput.clone()
-            input[1] = noun
-            input[2] = verb
-            val value = processIntcode(input)
+            val memory = staticInput.clone()
+            memory[1] = noun
+            memory[2] = verb
+            val value = processIntcode(memory)
             if (value == 19690720) {
                 print("Output: $value from noun: $noun, verb: $verb. Solution: ${100 * noun + verb}\n")
                 return
@@ -19,8 +19,7 @@ fun main() {
 fun processIntcode(input: Array<Int>): Int {
     var index = 0
     while (true) {
-        val instruction = input[index]
-        when (instruction) {
+        when (input[index]) {
             1 -> processOpcode1(input, index + 1, index + 2, index + 3)
             2 -> processOpcode2(input, index + 1, index + 2, index + 3)
             99 -> return input[0]
