@@ -9,26 +9,13 @@ fun intcodeComputer(memory: Array<Int>) {
     var index = 0
     while (true) {
         val instruction = memory[index]
-        val opcode = instruction % 100
-        when (opcode) {
+        when (instruction % 100) {
             1 -> {
-                val modeParam1 = (instruction / 100) % 10
-                val modeParam2 = (instruction / 1000) % 10
-
-                val value1 = if (modeParam1 == 1) memory[index + 1] else memory[memory[index + 1]]
-                val value2 = if (modeParam2 == 1) memory[index + 2] else memory[memory[index + 2]]
-
-                memory[memory[index + 3]] = value1 + value2
+                memory[memory[index + 3]] = param1(instruction, memory, index) + param2(instruction, memory, index)
                 index += 4
             }
             2 -> {
-                val modeParam1 = (instruction / 100) % 10
-                val modeParam2 = (instruction / 1000) % 10
-
-                val value1 = if (modeParam1 == 1) memory[index + 1] else memory[memory[index + 1]]
-                val value2 = if (modeParam2 == 1) memory[index + 2] else memory[memory[index + 2]]
-
-                memory[memory[index + 3]] = value1 * value2
+                memory[memory[index + 3]] = param1(instruction, memory, index) * param2(instruction, memory, index)
                 index += 4
             }
             3 -> {
@@ -47,4 +34,12 @@ fun intcodeComputer(memory: Array<Int>) {
             else -> throw IllegalArgumentException("Unexpected instruction: $instruction")
         }
     }
+}
+
+private fun param1(instruction: Int, memory: Array<Int>, index: Int): Int {
+    return if ((instruction / 100) % 10 == 1) memory[index + 1] else memory[memory[index + 1]]
+}
+
+private fun param2(instruction: Int, memory: Array<Int>, index: Int): Int {
+    return if ((instruction / 1000) % 10 == 1) memory[index + 2] else memory[memory[index + 2]]
 }
