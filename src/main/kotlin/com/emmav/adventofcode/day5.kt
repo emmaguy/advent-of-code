@@ -4,7 +4,7 @@ fun main() {
     intcodeComputer(memory = arrayOf(3, 0, 4, 0, 99))
 }
 
-fun intcodeComputer(memory: Array<Int>): Int {
+fun intcodeComputer(memory: Array<Int>) {
     var index = 0
     while (true) {
         val instruction = memory[index]
@@ -18,25 +18,18 @@ fun intcodeComputer(memory: Array<Int>): Int {
                 index += 4
             }
             3 -> {
-                input(memory, memory[index + 1])
+                print("Awaiting input: ")
+                val input = readLine()!!
+                memory[index + 1] = input.toInt()
+                print("input: $input, stored in index $index\n")
                 index += 2
             }
             4 -> {
-                output(memory, memory[index + 1])
+                print("output: ${memory[index + 1]}\n")
                 index += 2
             }
-            99 -> return memory[0]
+            99 -> return
             else -> throw IllegalArgumentException("Unexpected instruction: $instruction")
         }
     }
-}
-
-private fun input(memory: Array<Int>, index: Int) {
-    val input = readLine()!!
-    memory[index] = input.toInt()
-    print("input: $input, stored in index $index\n")
-}
-
-private fun output(memory: Array<Int>, index: Int) {
-    print("output: ${memory[index]}\n")
 }
