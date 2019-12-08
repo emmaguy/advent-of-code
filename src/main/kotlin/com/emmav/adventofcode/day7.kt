@@ -1,20 +1,44 @@
 import com.emmav.adventofcode.IntcodeComputer
 import java.io.File
 
+val memory = File("input/day7.txt")
+    .readLines()
+    .first()
+    .split(",")
+    .map { it.toInt() }
+    .toTypedArray()
+
 fun main() {
-    val memory = File("input/day7.txt")
-        .readLines()
-        .first()
+
+    val test1 = "3,26,1001,26,-4,26,3,27,1002,27,2,27,1,27,26,27,4,27,1001,28,-1,28,1005,28,6,99,0,0,5"
         .split(",")
         .map { it.toInt() }
         .toTypedArray()
 
-    val test1 = "3,31,3,32,1002,32,10,32,1001,31,-2,31,1007,31,0,33,1002,33,7,33,1,33,31,31,1,32,31,31,4,31,99,0,0,0"
-        .split(",")
-        .map { it.toInt() }
-        .toTypedArray()
+    part2(test1)
+}
 
-    part1(memory)
+private fun part2(program: Array<Int>) {
+    val phaseSequence = listOf(9, 8, 7, 6, 5)
+
+    val ampAOutput = ampWithFeedback(phaseSequence[0], 0, program)
+    val ampBOutput = ampWithFeedback(phaseSequence[1], ampAOutput, program)
+    val ampCOutput = ampWithFeedback(phaseSequence[2], ampBOutput, program)
+    val ampDOutput = ampWithFeedback(phaseSequence[3], ampCOutput, program)
+    val ampEOutput = ampWithFeedback(phaseSequence[4], ampDOutput, program)
+
+    print(ampEOutput)
+}
+
+private fun ampWithFeedback(phaseSetting: Int, input: Int, program: Array<Int>): Int {
+    val programInput = mutableListOf(phaseSetting, input)
+    val computer = IntcodeComputer()
+    computer.newOutputCallback = {
+        programInput.add(it)
+    }
+    val output = computer.compute(program, programInput)
+    println("output from amp: $output")
+    return output.last()
 }
 
 private fun part1(input: Array<Int>) {
