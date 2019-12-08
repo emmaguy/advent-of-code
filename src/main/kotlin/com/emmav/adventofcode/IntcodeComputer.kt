@@ -2,8 +2,10 @@ package com.emmav.adventofcode
 
 class IntcodeComputer {
 
-    fun compute(memory: Array<Int>) {
+    fun compute(memory: Array<Int>, input: List<Int>): List<Int> {
+        val output = mutableListOf<Int>()
         var index = 0
+        var inputIndex = 0
         while (true) {
             val instruction = memory[index]
             when (instruction % 100) {
@@ -16,15 +18,12 @@ class IntcodeComputer {
                     index += 4
                 }
                 3 -> {
-                    print("Awaiting input: ")
-                    val input = readLine()!!
                     val address = memory[index + 1]
-                    memory[address] = input.toInt()
+                    memory[address] = input[inputIndex++]
                     index += 2
                 }
                 4 -> {
-                    val value = param1(instruction, memory, index)
-                    print("output is: $value\n")
+                    output.add(param1(instruction, memory, index))
                     index += 2
                 }
                 5 -> {
@@ -59,7 +58,7 @@ class IntcodeComputer {
                     memory[memory[index + 3]] = value
                     index += 4
                 }
-                99 -> return
+                99 -> return output
                 else -> throw IllegalArgumentException("Unexpected instruction: $instruction")
             }
         }
