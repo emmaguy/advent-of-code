@@ -1,0 +1,115 @@
+instruction: class aoc2019.Intcode$Instruction$Input, address: 0
+Input: 9
+instruction: class aoc2019.Intcode$Instruction$Add, address: 2
+Add: result 5 (5 + -4)
+instruction: class aoc2019.Intcode$Instruction$Input, address: 6
+Input: 0
+instruction: class aoc2019.Intcode$Instruction$Multiply, address: 8
+Multiply: 0
+instruction: class aoc2019.Intcode$Instruction$Add, address: 12
+Add: result 5 (5 + 5)
+instruction: class aoc2019.Intcode$Instruction$Output, address: 16
+Output: 5
+instruction: class aoc2019.Intcode$Instruction$Add, address: 18
+Add: result 4 (4 + -1)
+instruction: class aoc2019.Intcode$Instruction$JumpIfTrue, address: 22
+JumpIfTrue: 4
+JumpIfTrue: not zero
+JumpIfTrue: set index: 3 (6, len: 3
+instruction: class aoc2019.Intcode$Instruction$Input, address: 6
+No input, halting
+instruction: class aoc2019.Intcode$Instruction$Input, address: 0
+Input: 8
+instruction: class aoc2019.Intcode$Instruction$Add, address: 2
+Add: result 4 (4 + -4)
+instruction: class aoc2019.Intcode$Instruction$Input, address: 6
+Input: 5
+instruction: class aoc2019.Intcode$Instruction$Multiply, address: 8
+Multiply: 10
+instruction: class aoc2019.Intcode$Instruction$Add, address: 12
+Add: result 14 (14 + 4)
+instruction: class aoc2019.Intcode$Instruction$Output, address: 16
+Output: 14
+instruction: class aoc2019.Intcode$Instruction$Add, address: 18
+Add: result 3 (3 + -1)
+instruction: class aoc2019.Intcode$Instruction$JumpIfTrue, address: 22
+JumpIfTrue: 3
+JumpIfTrue: not zero
+JumpIfTrue: set index: 3 (6, len: 3
+instruction: class aoc2019.Intcode$Instruction$Input, address: 6
+No input, halting
+instruction: class aoc2019.Intcode$Instruction$Input, address: 0
+Input: 7
+instruction: class aoc2019.Intcode$Instruction$Add, address: 2
+Add: result 3 (3 + -4)
+instruction: class aoc2019.Intcode$Instruction$Input, address: 6
+Input: 14
+instruction: class aoc2019.Intcode$Instruction$Multiply, address: 8
+Multiply: 28
+instruction: class aoc2019.Intcode$Instruction$Add, address: 12
+Add: result 31 (31 + 3)
+instruction: class aoc2019.Intcode$Instruction$Output, address: 16
+Output: 31
+instruction: class aoc2019.Intcode$Instruction$Add, address: 18
+Add: result 2 (2 + -1)
+instruction: class aoc2019.Intcode$Instruction$JumpIfTrue, address: 22
+JumpIfTrue: 2
+JumpIfTrue: not zero
+JumpIfTrue: set index: 3 (6, len: 3
+instruction: class aoc2019.Intcode$Instruction$Input, address: 6
+No input, halting
+instruction: class aoc2019.Intcode$Instruction$Input, address: 0
+Input: 6
+instruction: class aoc2019.Intcode$Instruction$Add, address: 2
+Add: result 2 (2 + -4)
+instruction: class aoc2019.Intcode$Instruction$Input, address: 6
+Input: 31
+instruction: class aoc2019.Intcode$Instruction$Multiply, address: 8
+Multiply: 62
+instruction: class aoc2019.Intcode$Instruction$Add, address: 12
+Add: result 64 (64 + 2)
+instruction: class aoc2019.Intcode$Instruction$Output, address: 16
+Output: 64
+instruction: class aoc2019.Intcode$Instruction$Add, address: 18
+Add: result 1 (1 + -1)
+instruction: class aoc2019.Intcode$Instruction$JumpIfTrue, address: 22
+JumpIfTrue: 1
+JumpIfTrue: not zero
+JumpIfTrue: set index: 3 (6, len: 3
+instruction: class aoc2019.Intcode$Instruction$Input, address: 6
+No input, halting
+instruction: class aoc2019.Intcode$Instruction$Input, address: 0
+Input: 5
+instruction: class aoc2019.Intcode$Instruction$Add, address: 2
+Add: result 1 (1 + -4)
+instruction: class aoc2019.Intcode$Instruction$Input, address: 6
+Input: 64
+instruction: class aoc2019.Intcode$Instruction$Multiply, address: 8
+Multiply: 128
+instruction: class aoc2019.Intcode$Instruction$Add, address: 12
+Add: result 129 (129 + 1)
+instruction: class aoc2019.Intcode$Instruction$Output, address: 16
+Output: 129
+instruction: class aoc2019.Intcode$Instruction$Add, address: 18
+Add: result 0 (0 + -1)
+instruction: class aoc2019.Intcode$Instruction$JumpIfTrue, address: 22
+JumpIfTrue: 0
+instruction: class aoc2019.Intcode$Instruction$Halt, address: 25
+instruction: class aoc2019.Intcode$Instruction$Input, address: 6
+Input: 129
+instruction: class aoc2019.Intcode$Instruction$Multiply, address: 8
+Multiply: 258
+instruction: class aoc2019.Intcode$Instruction$Add, address: 12
+Add: result 259 (259 + 1)
+instruction: class aoc2019.Intcode$Instruction$Output, address: 16
+Output: 259
+instruction: class aoc2019.Intcode$Instruction$Add, address: 18
+Add: result -1 (-1 + -1)
+instruction: class aoc2019.Intcode$Instruction$JumpIfTrue, address: 22
+JumpIfTrue: -1
+JumpIfTrue: not zero
+JumpIfTrue: set index: 3 (6, len: 3
+instruction: class aoc2019.Intcode$Instruction$Input, address: 6
+No input, halting
+
+Process finished with exit code 0

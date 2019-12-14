@@ -1,4 +1,5 @@
 import com.emmav.adventofcode.IntcodeComputer
+import com.emmav.adventofcode.permutations
 import java.io.File
 
 val memory = File("input/day7.txt")
@@ -15,50 +16,44 @@ fun main() {
         .map { it.toInt() }
         .toTypedArray()
 
-//    part1(memory)
-    part2(test1)
+    part1(memory)
+    part2(memory)
 }
 
 private fun part2(program: Array<Int>) {
-    val phaseSequence = listOf(9, 8, 7, 6, 5)
+    val max = listOf(5, 6, 7, 8, 9).permutations().map { calculateSignal(it, program.clone()) }.max()
+    println("part2: $max")
+}
 
+private fun calculateSignal(
+    phaseSequence: List<Int>,
+    program: Array<Int>
+): Int {
     val amplifiers = phaseSequence
-        .map { IntcodeComputer(program, mutableListOf(it)) }
+        .map { IntcodeComputer(program.clone(), mutableListOf(it)) }
 
-    amplifiers[0].addInput(0)
-
-    amplifiers[1].addInput(amplifiers[0].output().first())
-    amplifiers[2].addInput(amplifiers[1].output().first())
-    amplifiers[3].addInput(amplifiers[2].output().first())
-    amplifiers[4].addInput(amplifiers[3].output().first())
-    amplifiers[0].addInput(amplifiers[4].output().first())
+    var outputIndex = 0
+    while (amplifiers.any { !it.isDone() }) {
+        amplifiers.forEachIndexed { index, computer ->
+            if (index == 0) {
+                val output = amplifiers.last().output()
+                if (output.isEmpty()) {
+                    computer.addInput(0)
+                } else {
+                    computer.addInput(output[outputIndex - 1])
+                }
+            } else {
+                computer.addInput(amplifiers[(index - 1) % 5].output()[outputIndex])
+            }
+        }
+        outputIndex++
+    }
+    return amplifiers.last().output().last()
 }
 
 private fun part1(input: Array<Int>) {
-    val inputSequences = mutableListOf<List<Int>>()
-    // get lists of all combinations of 0-4
-    for (i in 0..4) {
-        for (j in 0..4) {
-            for (k in 0..4) {
-                for (l in 0..4) {
-                    for (m in 0..4) {
-                        if (i != j && i != k && i != l && i != m) {
-                            if (j != k && j != l && j != m) {
-                                if (k != l && k != m) {
-                                    if (l != m) {
-                                        inputSequences.add(listOf(i, j, k, l, m))
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    val max = inputSequences.map { calculateThrusterSignal(it, input) }.max()
-    print("max: $max")
+    val max = listOf(0, 1, 2, 3, 4).permutations().map { calculateThrusterSignal(it, input) }.max()
+    println("part1: $max")
 }
 
 private fun calculateThrusterSignal(phaseSequence: List<Int>, input: Array<Int>): Int {
