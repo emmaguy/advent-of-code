@@ -15,30 +15,23 @@ fun main() {
         .map { it.toInt() }
         .toTypedArray()
 
+//    part1(memory)
     part2(test1)
 }
 
 private fun part2(program: Array<Int>) {
     val phaseSequence = listOf(9, 8, 7, 6, 5)
 
-    val ampAOutput = ampWithFeedback(phaseSequence[0], 0, program)
-    val ampBOutput = ampWithFeedback(phaseSequence[1], ampAOutput, program)
-    val ampCOutput = ampWithFeedback(phaseSequence[2], ampBOutput, program)
-    val ampDOutput = ampWithFeedback(phaseSequence[3], ampCOutput, program)
-    val ampEOutput = ampWithFeedback(phaseSequence[4], ampDOutput, program)
+    val amplifiers = phaseSequence
+        .map { IntcodeComputer(program, mutableListOf(it)) }
 
-    print(ampEOutput)
-}
+    amplifiers[0].addInput(0)
 
-private fun ampWithFeedback(phaseSetting: Int, input: Int, program: Array<Int>): Int {
-    val programInput = mutableListOf(phaseSetting, input)
-    val computer = IntcodeComputer()
-    computer.newOutputCallback = {
-        programInput.add(it)
-    }
-    val output = computer.compute(program, programInput)
-    println("output from amp: $output")
-    return output.last()
+    amplifiers[1].addInput(amplifiers[0].output().first())
+    amplifiers[2].addInput(amplifiers[1].output().first())
+    amplifiers[3].addInput(amplifiers[2].output().first())
+    amplifiers[4].addInput(amplifiers[3].output().first())
+    amplifiers[0].addInput(amplifiers[4].output().first())
 }
 
 private fun part1(input: Array<Int>) {
@@ -69,20 +62,18 @@ private fun part1(input: Array<Int>) {
 }
 
 private fun calculateThrusterSignal(phaseSequence: List<Int>, input: Array<Int>): Int {
-    val computer = IntcodeComputer()
-    val amp1Result = amplifier(input1 = phaseSequence[0], input2 = 0, computer = computer, program = input)
-    val amp2Result = amplifier(input1 = phaseSequence[1], input2 = amp1Result, computer = computer, program = input)
-    val amp3Result = amplifier(input1 = phaseSequence[2], input2 = amp2Result, computer = computer, program = input)
-    val amp4Result = amplifier(input1 = phaseSequence[3], input2 = amp3Result, computer = computer, program = input)
-    return amplifier(input1 = phaseSequence[4], input2 = amp4Result, computer = computer, program = input)
+    val amp1Result = amplifier(input1 = phaseSequence[0], input2 = 0, program = input)
+    val amp2Result = amplifier(input1 = phaseSequence[1], input2 = amp1Result, program = input)
+    val amp3Result = amplifier(input1 = phaseSequence[2], input2 = amp2Result, program = input)
+    val amp4Result = amplifier(input1 = phaseSequence[3], input2 = amp3Result, program = input)
+    return amplifier(input1 = phaseSequence[4], input2 = amp4Result, program = input)
 }
 
 fun amplifier(
     input1: Int,
     input2: Int,
-    computer: IntcodeComputer,
     program: Array<Int>
 ): Int {
-    val compute = computer.compute(memory = program, input = listOf(input1, input2))
-    return compute.first()
+    val compute = IntcodeComputer(memory = program, inputList = mutableListOf(input1, input2)).apply { compute() }
+    return compute.output().first()
 }

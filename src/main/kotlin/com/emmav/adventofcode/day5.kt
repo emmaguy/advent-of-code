@@ -9,6 +9,6 @@ fun main() {
         .map { it.toInt() }
         .toTypedArray()
 
-    val output = IntcodeComputer().compute(memory = memory, input = listOf(5))
-    println("${output.joinToString(", ")}")
+    val output = IntcodeComputer(memory, mutableListOf(5)).compute()
+    println("$output")
 }

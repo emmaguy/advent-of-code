@@ -1,91 +1,146 @@
 package com.emmav.adventofcode
 
-class IntcodeComputer {
+class IntcodeComputer(private val memory: Array<Int>, private val inputList: MutableList<Int>) {
+    private var index = 0
+    private var isFinished = false
+    private val outputList = mutableListOf<Int>()
 
-    var newOutputCallback: ((Int) -> Unit)? = null
+    fun addInput(input: Int) {
+        inputList.add(input)
+        compute()
+    }
 
-    fun compute(memory: Array<Int>, input: List<Int>): List<Int> {
-        val output = mutableListOf<Int>()
-        var index = 0
-        var inputIndex = 0
+    fun isDone() = isFinished
+
+    fun output() = outputList.toList()
+
+    fun compute() {
         while (true) {
-            val instruction = memory[index]
-            when (instruction % 100) {
-                1 -> {
-                    // Add
-                    memory[memory[index + 3]] = param1(instruction, memory, index) + param2(instruction, memory, index)
-                    println("add, result: ${memory[memory[index + 3]]}")
-                    index += 4
+            val (instruction, params) = instructionAndParams(memory[index])
+            when (instruction.type) {
+                InstructionType.Add -> {
+                    memory[params[2]] = memory[params[0]] + memory[params[1]]
                 }
-                2 -> {
-                    // Multiply
-                    memory[memory[index + 3]] = param1(instruction, memory, index) * param2(instruction, memory, index)
-                    println("multiply, result: ${memory[memory[index + 3]]}")
-                    index += 4
+                InstructionType.Multiply -> {
+                    memory[params[2]] = memory[params[0]] * memory[params[1]]
                 }
-                3 -> {
-                    // Read from input
-                    val address = memory[index + 1]
-                    val inp = input[inputIndex++]
-                    println("input: $inp")
-                    memory[address] = inp
-                    index += 2
-                }
-                4 -> {
-                    // Write to output
-                    val out = param1(instruction, memory, index)
-                    output.add(out)
-                    println("output: $out")
-                    newOutputCallback?.invoke(out)
-                    index += 2
-                }
-                5 -> {
-                    // Jump if true
-                    if (param1(instruction, memory, index) != 0) {
-                        index = param2(instruction, memory, index)
+                InstructionType.Input -> {
+                    if (inputList.isEmpty()) {
+                        return
                     } else {
-                        index += 3
+                        memory[params[0]] = inputList.removeAt(0)
                     }
                 }
-                6 -> {
-                    // Jump if false
-                    if (param1(instruction, memory, index) == 0) {
-                        index = param2(instruction, memory, index)
-                    } else {
-                        index += 3
+                InstructionType.Output -> {
+                    outputList.add(memory[params[0]])
+                    println("output: ${outputList.last()}")
+                }
+                InstructionType.JumpIfTrue -> {
+                    if (memory[params[0]] != 0) {
+                        index = memory[params[1]] - instruction.type.length()
                     }
                 }
-                7 -> {
-                    // Less than
-                    val value = if (param1(instruction, memory, index) < param2(instruction, memory, index)) {
-                        1
-                    } else {
-                        0
+                InstructionType.JumpIfFalse -> {
+                    if (memory[params[0]] == 0) {
+                        index = memory[params[1]] - instruction.type.length()
                     }
-                    memory[memory[index + 3]] = value
-                    index += 4
                 }
-                8 -> {
-                    // Equals
-                    val value = if (param1(instruction, memory, index) == param2(instruction, memory, index)) {
-                        1
-                    } else {
-                        0
-                    }
-                    memory[memory[index + 3]] = value
-                    index += 4
+                InstructionType.LessThan -> {
+                    memory[params[2]] = if (memory[params[0]] < memory[params[1]]) 1 else 0
                 }
-                99 -> return output // Halt
+                InstructionType.Equals -> {
+                    memory[params[2]] = if (memory[params[0]] == memory[params[1]]) 1 else 0
+                }
+                InstructionType.Halt -> {
+                    isFinished = true
+                    return
+                }
                 else -> throw IllegalArgumentException("Unexpected instruction: $instruction")
             }
+            index += instruction.type.length()
         }
     }
 
-    private fun param1(instruction: Int, memory: Array<Int>, index: Int): Int {
-        return if ((instruction / 100) % 10 == 1) memory[index + 1] else memory[memory[index + 1]]
+    // Do operator overloading to get and set data in the intcode computer's memory
+    private operator fun Array<Int>.get(parameter: Parameter): Int {
+        return when (parameter.mode) {
+            ParameterMode.Position -> this[parameter.value]
+            ParameterMode.Immediate -> parameter.value
+            else -> throw IllegalArgumentException("Unexpected param: $parameter")
+        }
     }
 
-    private fun param2(instruction: Int, memory: Array<Int>, index: Int): Int {
-        return if ((instruction / 1000) % 10 == 1) memory[index + 2] else memory[memory[index + 2]]
+    private operator fun Array<Int>.set(parameter: Parameter, value: Int) {
+        when (parameter.mode) {
+            ParameterMode.Position -> this[parameter.value] = value
+            ParameterMode.Immediate -> throw RuntimeException("Immediate mode not supported for assignment")
+            else -> throw IllegalArgumentException("Unexpected param: $parameter")
+        }
     }
+
+    private fun instructionAndParams(opcode: Int): Pair<Instruction, List<Parameter>> {
+        val instruction = opcode.toInstruction()
+        val modes = opcode.toString().dropLast(2)
+            .padStart(3, '0')
+            .reversed()
+            .map { it.toString().toInt() }
+        val params = (0 until instruction.type.numberOfParams)
+            .map { Parameter(memory[index + 1 + it], modes[it].toParameterType()) }
+
+        return Pair(instruction, params)
+    }
+}
+
+private fun Int.toParameterType(): ParameterMode {
+    return when (this) {
+        0 -> ParameterMode.Position
+        1 -> ParameterMode.Immediate
+        2 -> ParameterMode.Relative
+        else -> throw IllegalArgumentException("Unexpected parameter type: $this")
+    }
+}
+
+data class Instruction(val type: InstructionType)
+
+private fun Int.toInstruction(): Instruction {
+    return Instruction(toString().takeLast(2).toInt().toType())
+}
+
+private fun Int.toType(): InstructionType {
+    return when (this) {
+        1 -> InstructionType.Add
+        2 -> InstructionType.Multiply
+        3 -> InstructionType.Input
+        4 -> InstructionType.Output
+        5 -> InstructionType.JumpIfTrue
+        6 -> InstructionType.JumpIfFalse
+        7 -> InstructionType.LessThan
+        8 -> InstructionType.Equals
+        9 -> InstructionType.RelativeOffset
+        99 -> InstructionType.Halt
+        else -> throw IllegalArgumentException("Unexpected instruction: $this")
+    }
+}
+
+data class Parameter(val value: Int, val mode: ParameterMode)
+
+enum class ParameterMode {
+    Relative,
+    Position,
+    Immediate
+}
+
+enum class InstructionType(val numberOfParams: Int) {
+    Add(numberOfParams = 3),
+    Multiply(numberOfParams = 3),
+    Input(numberOfParams = 1),
+    Output(numberOfParams = 1),
+    JumpIfTrue(numberOfParams = 2),
+    JumpIfFalse(numberOfParams = 2),
+    LessThan(numberOfParams = 3),
+    Equals(numberOfParams = 3),
+    RelativeOffset(numberOfParams = 1),
+    Halt(numberOfParams = 0);
+
+    fun length() = numberOfParams + 1
 }
