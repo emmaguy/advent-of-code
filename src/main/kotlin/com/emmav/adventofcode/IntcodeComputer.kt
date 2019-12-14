@@ -3,6 +3,7 @@ package com.emmav.adventofcode
 class IntcodeComputer(private val memory: Array<Int>, private val inputList: MutableList<Int>) {
     private var index = 0
     private var isFinished = false
+    private var relativeBaseOffset = 0
     private val outputList = mutableListOf<Int>()
 
     fun addInput(input: Int) {
@@ -17,6 +18,7 @@ class IntcodeComputer(private val memory: Array<Int>, private val inputList: Mut
     fun compute() {
         while (true) {
             val (instruction, params) = instructionAndParams(memory[index])
+            println("instruction: ${instruction.type}")
             when (instruction.type) {
                 InstructionType.Add -> {
                     memory[params[2]] = memory[params[0]] + memory[params[1]]
@@ -26,14 +28,16 @@ class IntcodeComputer(private val memory: Array<Int>, private val inputList: Mut
                 }
                 InstructionType.Input -> {
                     if (inputList.isEmpty()) {
+                        println("no input, halting")
                         return
                     } else {
                         memory[params[0]] = inputList.removeAt(0)
+                        println("input: ${memory[params[0]]}")
                     }
                 }
                 InstructionType.Output -> {
                     outputList.add(memory[params[0]])
-                    println("output: ${outputList.last()}")
+                    println("output: ${memory[params[0]]}")
                 }
                 InstructionType.JumpIfTrue -> {
                     if (memory[params[0]] != 0) {
@@ -55,7 +59,10 @@ class IntcodeComputer(private val memory: Array<Int>, private val inputList: Mut
                     isFinished = true
                     return
                 }
-                else -> throw IllegalArgumentException("Unexpected instruction: $instruction")
+                InstructionType.RelativeOffset -> {
+                    relativeBaseOffset = memory[params[0]]
+                    println("relativeBaseOffset: $relativeBaseOffset")
+                }
             }
             index += instruction.type.length()
         }
@@ -66,7 +73,7 @@ class IntcodeComputer(private val memory: Array<Int>, private val inputList: Mut
         return when (parameter.mode) {
             ParameterMode.Position -> this[parameter.value]
             ParameterMode.Immediate -> parameter.value
-            else -> throw IllegalArgumentException("Unexpected param: $parameter")
+            ParameterMode.Relative -> this[parameter.value + relativeBaseOffset]
         }
     }
 
@@ -74,7 +81,7 @@ class IntcodeComputer(private val memory: Array<Int>, private val inputList: Mut
         when (parameter.mode) {
             ParameterMode.Position -> this[parameter.value] = value
             ParameterMode.Immediate -> throw RuntimeException("Immediate mode not supported for assignment")
-            else -> throw IllegalArgumentException("Unexpected param: $parameter")
+            ParameterMode.Relative -> this[parameter.value + relativeBaseOffset] = value
         }
     }
 
