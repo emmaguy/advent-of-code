@@ -14,4 +14,5 @@ fun main() {
     inputMemory.copyInto(destination = memory)
 
     IntcodeComputer(memory, mutableListOf(1)).compute()
+    IntcodeComputer(memory, mutableListOf(2)).compute()
 }
