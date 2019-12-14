@@ -7,7 +7,7 @@ private val memory = File("input/day13.txt")
     .readLines()
     .first()
     .split(",")
-    .map { it.toInt() }
+    .map { it.toLong() }
     .toTypedArray()
 
 fun main() {

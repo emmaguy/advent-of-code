@@ -6,7 +6,7 @@ fun main() {
         .readLines()
         .first()
         .split(",")
-        .map { it.toInt() }
+        .map { it.toLong() }
         .toTypedArray()
 
     val output = IntcodeComputer(memory, mutableListOf(5)).compute()
