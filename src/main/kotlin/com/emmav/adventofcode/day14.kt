@@ -29,15 +29,11 @@ fun requiredOre(): Int {
     // Find all the base chemicals (chemicals produced directly from ore) we need to create fuel
     val requiredBaseChemicals = findBaseChemicalsRequired(reactionForFuel, amount = 1)
 
-    // Figure out how much we need of each
-    val baseChemicalsTotals = requiredBaseChemicals.groupingBy { it }
-        .fold(0) { accumulator, _ -> accumulator + 1 }
-
     println("Base chemicals needed")
-    baseChemicalsTotals.forEach { println(it) }
+    requiredBaseChemicals.forEach { println(it) }
 
     var requiredOre = 0
-    for ((chemical, amount) in baseChemicalsTotals) {
+    for ((chemical, amount) in requiredBaseChemicals) {
         val reaction = chemical.reactionToCreate()
         if (reaction.chemicals.size != 1) {
             throw IllegalArgumentException("Invalid base reaction $reaction")
@@ -53,29 +49,33 @@ fun requiredOre(): Int {
     return requiredOre
 }
 
-fun findBaseChemicalsRequired(reaction: Reaction, amount: Int): List<Chemical> {
+fun findBaseChemicalsRequired(reaction: Reaction, amount: Int): Map<Chemical, Int> {
     println("Reaction creating ${reaction.output.name}, we need $amount")
-    val baseChemicals = mutableListOf<Chemical>()
+    val baseChemicals = mutableMapOf<Chemical, Int>()
     for (chemical in reaction.chemicals) {
         if (chemical.name == "ORE") {
-            for (i in 0 until amount) {
-                baseChemicals.add(reaction.output)
-            }
+            addChemicals(baseChemicals, reaction.output, amount)
         } else {
             val amountNeeded = if ((chemical.amount * amount % reaction.output.amount) != 0) {
                 (chemical.amount * amount + reaction.output.amount) / reaction.output.amount
             } else {
                 chemical.amount * amount / reaction.output.amount
             }
-            baseChemicals.addAll(
-                findBaseChemicalsRequired(chemical.reactionToCreate(), amount = amountNeeded)
-            )
+            val chemicals = findBaseChemicalsRequired(chemical.reactionToCreate(), amount = amountNeeded)
+            chemicals.forEach { addChemicals(baseChemicals, it.key, it.value) }
         }
     }
     return baseChemicals
 }
 
-fun Chemical.reactionToCreate(): Reaction {
+private fun addChemicals(baseChemicals: MutableMap<Chemical, Int>, output: Chemical, amount: Int) {
+    if (!baseChemicals.containsKey(output)) {
+        baseChemicals[output] = 0
+    }
+    baseChemicals[output] = amount + baseChemicals[output]!!
+}
+
+private fun Chemical.reactionToCreate(): Reaction {
     return reactions.first { this.name == it.output.name }
 }
 
