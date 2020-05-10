@@ -1,4 +1,4 @@
-import com.emmav.adventofcode.IntcodeComputer
+package com.emmav.adventofcode.`2019`
 import java.io.File
 
 val inputMemory = File("input/day9.txt")
@@ -9,7 +9,6 @@ val inputMemory = File("input/day9.txt")
     .toTypedArray()
 
 fun main() {
-    val input = arrayOf(104, 1125899906842624, 99)
     val memory = LongArray(100000000).toTypedArray()
     inputMemory.copyInto(destination = memory)
 

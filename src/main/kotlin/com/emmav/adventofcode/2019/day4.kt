@@ -1,3 +1,5 @@
+package com.emmav.adventofcode.`2019`
+
 fun main() {
     val size = findValidValues(min = 246540, max = 787419)
     print("count: $size\n\n")

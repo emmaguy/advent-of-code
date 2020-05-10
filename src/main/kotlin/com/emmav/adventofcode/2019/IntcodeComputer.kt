@@ -1,4 +1,4 @@
-package com.emmav.adventofcode
+package com.emmav.adventofcode.`2019`
 
 class IntcodeComputer(private val memory: Array<Long>, private val inputList: MutableList<Long>) {
     private var index = 0L

@@ -1,4 +1,4 @@
-import com.emmav.adventofcode.IntcodeComputer
+package com.emmav.adventofcode.`2019`
 import java.io.File
 
 fun main() {

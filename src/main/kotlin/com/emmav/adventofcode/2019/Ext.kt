@@ -1,4 +1,4 @@
-package com.emmav.adventofcode
+package com.emmav.adventofcode.`2019`
 
 fun <T : Any> List<T>.permutations(): Sequence<List<T>> = if (size == 1) sequenceOf(this) else {
     val iterator = iterator()

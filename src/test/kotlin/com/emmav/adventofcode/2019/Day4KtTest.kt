@@ -1,6 +1,5 @@
-package com.emmav.adventofcode
+package com.emmav.adventofcode.`2019`
 
-import isValid
 import org.junit.Assert.*
 import org.junit.Test
 

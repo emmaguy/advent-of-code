@@ -1,3 +1,5 @@
+package com.emmav.adventofcode.`2019`
+
 fun main() {
     val result = calculateSteps(
         wire1 = listOf("R8", "U5", "L5", "D3"),
@@ -7,8 +9,8 @@ fun main() {
 }
 
 fun calculateSteps(wire1: List<String>, wire2: List<String>): Int {
-    val coordWire1 = Coordinate(0, 0)
-    val coordWire2 = Coordinate(0, 0)
+    val coordWire1 = CoordinateXY(0, 0)
+    val coordWire2 = CoordinateXY(0, 0)
 
     wire1.forEach { coordWire1.move(it) }
     wire2.forEach { coordWire2.move(it) }
@@ -18,7 +20,7 @@ fun calculateSteps(wire1: List<String>, wire2: List<String>): Int {
         .intersect(coordWire2.pointsVisited.map { it.first })
         .toMutableSet()
 
-    intersection.remove(Coordinate(0, 0))
+    intersection.remove(CoordinateXY(0, 0))
     intersection.forEach { print("$it\n") }
 
     val pointsFrom1 = coordWire1.pointsVisited.filter { intersection.contains(it.first) }
@@ -39,8 +41,8 @@ fun calculateSteps(wire1: List<String>, wire2: List<String>): Int {
     return steps.first()
 }
 
-data class Coordinate(var x: Int, var y: Int) {
-    val pointsVisited = mutableSetOf<Pair<Coordinate, Int>>()
+internal data class CoordinateXY(var x: Int, var y: Int) {
+    val pointsVisited = mutableSetOf<Pair<CoordinateXY, Int>>()
 
     private var stepsTaken = 1
 
@@ -51,7 +53,7 @@ data class Coordinate(var x: Int, var y: Int) {
         when (directionString) {
             'U' -> {
                 for (i in 0..distance) {
-                    pointsVisited.add(Pair(Coordinate(x + i, y), stepsTaken))
+                    pointsVisited.add(Pair(CoordinateXY(x + i, y), stepsTaken))
                     if (isFirstMove) {
                         isFirstMove = false
                     } else {
@@ -62,7 +64,7 @@ data class Coordinate(var x: Int, var y: Int) {
             }
             'D' -> {
                 for (i in 0..distance) {
-                    pointsVisited.add(Pair(Coordinate(x - i, y), stepsTaken))
+                    pointsVisited.add(Pair(CoordinateXY(x - i, y), stepsTaken))
                     if (isFirstMove) {
                         isFirstMove = false
                     } else {
@@ -73,7 +75,7 @@ data class Coordinate(var x: Int, var y: Int) {
             }
             'L' -> {
                 for (i in 0..distance) {
-                    pointsVisited.add(Pair(Coordinate(x, y - i), stepsTaken))
+                    pointsVisited.add(Pair(CoordinateXY(x, y - i), stepsTaken))
                     if (isFirstMove) {
                         isFirstMove = false
                     } else {
@@ -84,7 +86,7 @@ data class Coordinate(var x: Int, var y: Int) {
             }
             'R' -> {
                 for (i in 0..distance) {
-                    pointsVisited.add(Pair(Coordinate(x, y + i), stepsTaken))
+                    pointsVisited.add(Pair(CoordinateXY(x, y + i), stepsTaken))
                     if (isFirstMove) {
                         isFirstMove = false
                     } else {

@@ -1,6 +1,5 @@
-package com.emmav.adventofcode
+package com.emmav.adventofcode.`2019`
 
-import calculateSteps
 import junit.framework.Assert.assertEquals
 import org.junit.Test
 

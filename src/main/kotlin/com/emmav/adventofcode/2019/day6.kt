@@ -1,3 +1,4 @@
+package com.emmav.adventofcode.`2019`
 import java.io.File
 
 var total = 0

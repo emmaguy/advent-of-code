@@ -1,8 +1,8 @@
-import com.emmav.adventofcode.IntcodeComputer
-import com.emmav.adventofcode.permutations
+package com.emmav.adventofcode.`2019`
+
 import java.io.File
 
-val memory = File("input/day7.txt")
+private val memory = File("input/day7.txt")
     .readLines()
     .first()
     .split(",")
