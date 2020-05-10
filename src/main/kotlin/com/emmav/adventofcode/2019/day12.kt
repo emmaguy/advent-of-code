@@ -5,7 +5,7 @@ import kotlin.math.absoluteValue
 
 fun main() {
     val names = listOf("Io", "Europa", "Ganymede", "Callisto")
-    val moons = File("input/day12-2.txt").readLines()
+    val moons = File("input/2019/day12-2.txt").readLines()
         .mapIndexed { index, it ->
             val positions = it.trim('<', '>').split(",")
             val x = positions[0].replace("x=", "").trim()

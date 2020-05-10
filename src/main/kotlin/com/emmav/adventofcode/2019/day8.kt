@@ -3,7 +3,7 @@ package com.emmav.adventofcode.`2019`
 import java.io.File
 
 fun main() {
-    val input = File("input/day8.txt").readLines().first()
+    val input = File("input/2019/day8.txt").readLines().first()
     val layers = parseImage(input, 25, 6)
 //    val layers = parseImage("0222112222120000", 2, 2)
 

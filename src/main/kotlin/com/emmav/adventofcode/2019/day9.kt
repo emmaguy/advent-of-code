@@ -1,7 +1,7 @@
 package com.emmav.adventofcode.`2019`
 import java.io.File
 
-val inputMemory = File("input/day9.txt")
+val inputMemory = File("input/2019/day9.txt")
     .readLines()
     .first()
     .split(",")

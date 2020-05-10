@@ -2,7 +2,7 @@ package com.emmav.adventofcode.`2019`
 
 import java.io.File
 
-private val reactions = File("input/day14-1.txt").readLines()
+private val reactions = File("input/2019/day14-1.txt").readLines()
     .map {
         val inputsAndOutputs = it.split("=>")
         val inputs = inputsAndOutputs[0].split(",")

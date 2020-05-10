@@ -2,7 +2,7 @@ package com.emmav.adventofcode.`2019`
 
 import java.io.File
 
-private val memory = File("input/day7.txt")
+private val memory = File("input/2019/day7.txt")
     .readLines()
     .first()
     .split(",")

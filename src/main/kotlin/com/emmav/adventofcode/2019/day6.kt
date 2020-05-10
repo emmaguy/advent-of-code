@@ -4,7 +4,7 @@ import java.io.File
 var total = 0
 
 fun main() {
-    val input = File("input/day6.txt").readLines()
+    val input = File("input/2019/day6.txt").readLines()
 
     val map = mutableMapOf<String, Object>()
 

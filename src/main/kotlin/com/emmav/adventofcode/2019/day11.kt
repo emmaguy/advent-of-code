@@ -1,7 +1,7 @@
 package com.emmav.adventofcode.`2019`
 import java.io.File
 
-private val input = File("input/day11.txt")
+private val input = File("input/2019/day11.txt")
     .readLines()
     .first()
     .split(",")

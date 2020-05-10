@@ -2,7 +2,7 @@ package com.emmav.adventofcode.`2019`
 import java.io.File
 
 fun main() {
-    val memory = File("input/day5.txt")
+    val memory = File("input/2019/day5.txt")
         .readLines()
         .first()
         .split(",")

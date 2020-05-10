@@ -3,7 +3,7 @@ package com.emmav.adventofcode.`2019`
 import java.io.File
 import kotlin.math.absoluteValue
 
-private val memory = File("input/day13.txt")
+private val memory = File("input/2019/day13.txt")
     .readLines()
     .first()
     .split(",")

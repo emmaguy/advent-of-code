@@ -6,7 +6,7 @@ import kotlin.math.pow
 import kotlin.math.sqrt
 
 fun main() {
-    val inputAsteroidField = File("input/day10-1.txt").readLines()
+    val inputAsteroidField = File("input/2019/day10-1.txt").readLines()
         .mapIndexed { rowIndex, row ->
             row.mapIndexed { columnIndex, character ->
                 if (character == '#') {
