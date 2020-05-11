@@ -3,13 +3,13 @@ package com.emmav.adventofcode.`2015`
 import junit.framework.Assert.assertEquals
 import org.junit.Test
 
-class Day1KtTest {
+class Day1Test {
 
-    @Test fun `example1`() {
+    @Test fun example1() {
         assertEquals(0, calculateFloor("(())"))
     }
 
-    @Test fun `example2`() {
+    @Test fun example2() {
         assertEquals(0, calculateFloor("()()"))
     }
 }
