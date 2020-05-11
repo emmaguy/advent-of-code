@@ -6,10 +6,33 @@ fun main() {
     val directions = File("input/2015/day3.txt").readLines().first()
 
     println("part1: ${housesThatReceiveAtLeastOnePresent(directions)}")
-//    println("part2: ${dimensions.map { ribbonRequired(it) }.sum()}")
+    println("part2: ${part2(directions)}")
 }
 
-internal fun housesThatReceiveAtLeastOnePresent(directionsString: String): Int {
+internal fun String.santaDirections(): String {
+    return filterIndexed { index, _ -> index % 2 == 0 }
+}
+
+internal fun String.roboSantaDirections(): String {
+    return filterIndexed { index, _ -> index % 2 == 1 }
+}
+
+internal fun part2(directions: String): Int {
+    val santasHouses = housesThatReceivePresents(directions.santaDirections(), who = "santa")
+    val roboSantaHouses = housesThatReceivePresents(directions.roboSantaDirections(), who = "robosanta")
+
+    val overallHouses = mutableMapOf<String, Int>()
+    overallHouses.putAll(santasHouses)
+    overallHouses.putAll(roboSantaHouses)
+
+    return overallHouses.size
+}
+
+internal fun housesThatReceiveAtLeastOnePresent(directionsString: String, who: String = "santa"): Int {
+    return housesThatReceivePresents(directionsString, who).size
+}
+
+internal fun housesThatReceivePresents(directionsString: String, who: String): MutableMap<String, Int> {
     val directions = directionsString.toDirections()
 
     val coordinatesVisited = mutableMapOf<String, Int>()
@@ -25,11 +48,11 @@ internal fun housesThatReceiveAtLeastOnePresent(directionsString: String): Int {
             Direction.LEFT -> ++xPos
             Direction.RIGHT -> --xPos
         }
-        println("visiting ($xPos,$yPos)")
+        println("$who visits ($xPos,$yPos)")
         coordinatesVisited.append("($xPos,$yPos)")
     }
 
-    return coordinatesVisited.size
+    return coordinatesVisited
 }
 
 private fun MutableMap<String, Int>.append(key: String) {
