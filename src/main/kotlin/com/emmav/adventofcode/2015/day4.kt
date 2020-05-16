@@ -1,11 +1,31 @@
+@file:Suppress("EXPERIMENTAL_API_USAGE")
+
 package com.emmav.adventofcode.`2015`
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.channels.produce
+import kotlinx.coroutines.runBlocking
 import java.math.BigInteger
 import java.security.MessageDigest
 
 fun main() {
-    println("part1: ${findLowestNumberWhichStartsWithAtLeastFiveZeros("yzbqklnj")}")
-    println("part2: ${findLowestNumberWhichStartsWithAtLeastSixZeros("yzbqklnj")}")
+    val key = "yzbqklnj"
+
+    println("part1: ${findLowestNumberWhichStartsWithAtLeastFiveZeros(key)}")
+
+    runBlocking {
+        println("part2: ")
+
+        val numbers = produceNumbers()
+        val hashes = calculate(key, numbers)
+        repeat(1) {
+            println(hashes.receive())
+        }
+
+        coroutineContext.cancelChildren()
+    }
 }
 
 internal fun findLowestNumberWhichStartsWithAtLeastFiveZeros(key: String): Int {
@@ -19,14 +39,22 @@ internal fun findLowestNumberWhichStartsWithAtLeastFiveZeros(key: String): Int {
     }
 }
 
-internal fun findLowestNumberWhichStartsWithAtLeastSixZeros(key: String): Int {
-    var number = 0
-    while (true) {
-        val hash = calculateSecretKeyHash(key, number)
-        if (hash.substring(0, 6) == "000000") {
-            return number
+/**
+ * Product an infinite stream of integers, starting from 0
+ */
+fun CoroutineScope.produceNumbers() = produce {
+    var x = 0
+    while (true) send(x++)
+}
+
+fun CoroutineScope.calculate(key: String, numbers: ReceiveChannel<Int>): ReceiveChannel<Int> {
+    return produce {
+        for (i in numbers) {
+            val hash = calculateSecretKeyHash(key, i)
+            if (hash.substring(0, 6) == "000000") {
+                send(i)
+            }
         }
-        number++
     }
 }
 
